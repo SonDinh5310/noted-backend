@@ -4,7 +4,7 @@
 
 - _Routes that are **PRIVATE** require a token to use. To get a token, simply perform a register or login_
 
-- _The token will be required to set under the header of_ `x-auth-token: token`
+- _The token will be required to set under the header of_ `auth-token: token`
 
 Unless specify otherwise, all routes start in http://localhost:3000/api
 
