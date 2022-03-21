@@ -1,0 +1,21 @@
+{
+    "name": "noted-backend",
+    "version": "1.0.0",
+    "description": "The backend of Noted - A markdown note taking app",
+    "main": "index.js",
+    "scripts": {
+        "start": "nodemon index.js"
+    },
+    "author": "JamesDinh",
+    "license": "ISC",
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "express": "^4.17.3",
+        "joi": "^17.6.0",
+        "jsonwebtoken": "^8.5.1",
+        "mongoose": "^6.2.7"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.15"
+    }
+}
