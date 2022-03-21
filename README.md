@@ -46,6 +46,7 @@ Sample
 
 - express
 - mongoose
+- joi
 - bcryptjs
 - jsonwebtoken
 - nodemon
