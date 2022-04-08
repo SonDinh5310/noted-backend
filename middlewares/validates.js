@@ -18,7 +18,7 @@ const registerValidate = (data) => {
             .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
             .required(),
         password: Joi.string()
-            .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.,])[A-Za-z\d@$!%*?&.,]{8,}$"))
+            .pattern(new RegExp("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-.,]).{8,}$"))
             .required(),
     });
 
