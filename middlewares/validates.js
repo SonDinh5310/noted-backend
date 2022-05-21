@@ -1,4 +1,4 @@
-const Joi = require("joi");
+const Joi = require('joi');
 
 const registerValidate = (data) => {
     const schema = Joi.object({
@@ -15,10 +15,10 @@ const registerValidate = (data) => {
 
         email: Joi.string()
             .min(10)
-            .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+            .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
             .required(),
         password: Joi.string()
-            .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+            .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
             .required(),
     });
 
@@ -29,15 +29,26 @@ const loginValidate = (data) => {
     const schema = Joi.object({
         email: Joi.string()
             .min(10)
-            .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+            .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
             .required(),
 
         password: Joi.string()
-            .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$"))
+            .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
             .required(),
     });
 
     return schema.validate(data);
 };
 
-module.exports = { registerValidate, loginValidate };
+const noteValidate = (data) => {
+    const schema = Joi.object({
+        name: Joi.string().min(4).required(),
+        lastUpdated: Joi.date().timestamp('javascript').required(),
+        createdAt: Joi.date(),
+        content: Joi.string(),
+    });
+
+    return schema.validate(data);
+};
+
+module.exports = { registerValidate, loginValidate, noteValidate };

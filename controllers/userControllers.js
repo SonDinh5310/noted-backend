@@ -1,8 +1,8 @@
-const UserModel = require("../models/userModel.js");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const config = require("../configs/configs.js");
-const { registerValidate, loginValidate } = require("../middlewares/validates");
+const UserModel = require('../models/userModel.js');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('../configs/configs.js');
+const { registerValidate, loginValidate } = require('../middlewares/validates');
 
 class UserControllers {
     register = async (req, res) => {
@@ -13,7 +13,7 @@ class UserControllers {
 
         const emailExists = await UserModel.findOne({ email: req.body.email });
         if (emailExists) {
-            return res.status(400).send("Email already exists in database");
+            return res.status(400).send('Email already exists in database');
         }
 
         const salt = bcrypt.genSaltSync(10);
@@ -21,7 +21,6 @@ class UserControllers {
 
         const newUser = new UserModel({
             name: req.body.name,
-            username: req.body.username,
             email: req.body.email,
             password: hashPassword,
         });
@@ -52,15 +51,15 @@ class UserControllers {
             user.password
         );
         if (!loginPasswordCheck) {
-            return res.status(400).send("Password incorrect!");
+            return res.status(400).send('Password incorrect!');
         }
 
         const token = jwt.sign({ id: user._id }, config.privateKey, {
-            expiresIn: "12h",
+            expiresIn: '12h',
         });
 
         try {
-            res.header("auth-token", token).send(`Success!\n${token}`);
+            res.header('auth-token', token).send(`Success!\n${token}`);
         } catch (error) {
             res.status(400).send(`Error occured: ${error}`);
         }
