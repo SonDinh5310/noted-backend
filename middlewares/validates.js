@@ -18,7 +18,11 @@ const registerValidate = (data) => {
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
             .required(),
         password: Joi.string()
-            .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+            .pattern(
+                new RegExp(
+                    '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-.,]).{8,}$'
+                )
+            )
             .required(),
     });
 
@@ -33,7 +37,11 @@ const loginValidate = (data) => {
             .required(),
 
         password: Joi.string()
-            .pattern(new RegExp('^[a-zA-Z0-9]{3,30}$'))
+            .pattern(
+                new RegExp(
+                    '^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-.,]).{8,}$'
+                )
+            )
             .required(),
     });
 
