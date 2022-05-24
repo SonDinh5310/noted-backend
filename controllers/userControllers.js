@@ -64,11 +64,7 @@ class UserControllers {
 
         try {
             delete user._doc.password;
-            return res
-                .header('auth-token', token)
-                .status(200)
-                .json(user._doc)
-                .send(token);
+            return res.header('auth-token', token).status(200).json(user._doc);
         } catch (error) {
             res.status(400).json({ error: error });
         }
