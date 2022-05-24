@@ -8,12 +8,16 @@ class UserControllers {
     register = async (req, res) => {
         const { error } = registerValidate(req.body);
         if (error) {
-            return res.status(400).send(error.details[0].message);
+            return res.status(400).json({ error: error.details[0].message });
         }
 
-        const emailExists = await UserModel.findOne({ email: req.body.email });
+        const emailExists = await UserModel.findOne({
+            email: req.body.email,
+        }).select('-password');
         if (emailExists) {
-            return res.status(400).send('Email already exists in database');
+            return res
+                .status(400)
+                .json({ error: 'Email already exists in database' });
         }
 
         const salt = bcrypt.genSaltSync(10);
@@ -27,9 +31,9 @@ class UserControllers {
 
         try {
             const user = await newUser.save();
-            res.send(`Success!! new user:\n${user}`);
+            res.send(user);
         } catch (error) {
-            res.status(400).send(`Error occured: ${error}`);
+            res.status(400).json({ error: error });
         }
     };
 
@@ -42,8 +46,8 @@ class UserControllers {
         const user = await UserModel.findOne({ email: req.body.email });
         if (!user) {
             return res
-                .status(400)
-                .send("There's no user with this email in database");
+                .status(404)
+                .json({ error: "There's no user with this email in database" });
         }
 
         const loginPasswordCheck = bcrypt.compareSync(
@@ -51,7 +55,7 @@ class UserControllers {
             user.password
         );
         if (!loginPasswordCheck) {
-            return res.status(400).send('Password incorrect!');
+            return res.status(400).json({ error: 'Password incorrect!' });
         }
 
         const token = jwt.sign({ id: user._id }, config.privateKey, {
@@ -59,9 +63,14 @@ class UserControllers {
         });
 
         try {
-            res.header('auth-token', token).send(`Success!\n${token}`);
+            delete user._doc.password;
+            return res
+                .header('auth-token', token)
+                .status(200)
+                .json(user._doc)
+                .send(token);
         } catch (error) {
-            res.status(400).send(`Error occured: ${error}`);
+            res.status(400).json({ error: error });
         }
     };
 }

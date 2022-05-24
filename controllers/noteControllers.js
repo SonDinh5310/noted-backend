@@ -6,7 +6,7 @@ class NoteControllers {
             const notes = await NoteModel.find().sort({ createdAt: -1 });
             return res.status(200).json(notes);
         } catch (error) {
-            return res.status(400).send(error.details[0].message);
+            res.status(400).json({ error: error });
         }
     };
     getNoteById = async (req, res) => {
@@ -17,7 +17,7 @@ class NoteControllers {
             }
             return res.status(200).json(note);
         } catch (error) {
-            return res.status(400).send(error.details[0].message);
+            res.status(400).json({ error: error });
         }
     };
 }
