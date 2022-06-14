@@ -1,21 +1,18 @@
-const NoteModel = require('../models/noteModel.js');
-const UserModel = require('../models/userModel.js');
+const NoteModel = require("../models/noteModel.js");
+const UserModel = require("../models/userModel.js");
 
 class NoteControllers {
     getAllNotes = async (req, res) => {
         try {
             await NoteModel.find()
-                .select('-__v')
-                .populate({ path: 'owner', select: '-password -__v' })
-                // .sort({ lastUpdated: -1 })
+                .select("-__v")
+                .populate({ path: "owner", select: "-password -__v" })
                 .exec(function (err, doc) {
                     if (err) {
                         return res.status(500).send({ error: err });
                     }
                     return res.status(200).send(doc);
                 });
-            // console.log('notes:', notes);
-            // return res.status(200).json(notes);
         } catch (error) {
             console.log(error);
         }
@@ -24,7 +21,7 @@ class NoteControllers {
         try {
             const note = await NoteModel.findById(req.params._id);
             if (!note) {
-                return res.status(404).json({ error: 'Note not found!' });
+                return res.status(404).json({ error: "Note not found!" });
             }
             return res.status(200).json(note);
         } catch (error) {
@@ -63,7 +60,7 @@ class NoteControllers {
                     if (err) {
                         return res.status(500).send({ error: err });
                     }
-                    return res.send('Succesfully saved.');
+                    return res.send("Succesfully saved.");
                 });
         } catch (error) {
             console.log(error);
@@ -75,28 +72,25 @@ class NoteControllers {
         if (!userExist) {
             return res
                 .status(404)
-                .send('This user does not exist in database!');
+                .send("This user does not exist in database!");
         }
-        // const notesIds = notes
-        //     .filter((note) => note.local_id)
-        //     .map((note) => note.local_id);
+
         const toBeUpdatedNotes = [];
         await Promise.all(
             notes.map(async (note) => {
-                const noteData = await NoteModel.find({
+                const noteData = await NoteModel.findOne({
                     local_id: note.local_id,
                     lastUpdated: { $gt: note.lastUpdated },
-                })?.populate({ path: 'owner', select: '-password -__v' });
+                })?.populate({ path: "owner", select: "-password -__v" });
 
-                if (noteData !== []) {
-                    console.log('noteData:', noteData);
-                    return toBeUpdatedNotes.push(noteData);
+                if (noteData !== null) {
+                    console.log("noteData:", noteData);
+                    toBeUpdatedNotes.push(noteData);
                 }
                 return;
-                // return noteData.filter((note) => note !== []);
             })
         );
-        // console.log('toBeUpdatedNotes:', toBeUpdatedNotes);
+
         return res.status(200).json(toBeUpdatedNotes);
     };
 }
