@@ -1,12 +1,12 @@
-const NoteModel = require("../models/noteModel.js");
-const UserModel = require("../models/userModel.js");
+const NoteModel = require('../models/noteModel.js');
+const UserModel = require('../models/userModel.js');
 
 class NoteControllers {
     getAllNotes = async (req, res) => {
         try {
             await NoteModel.find()
-                .select("-__v")
-                .populate({ path: "owner", select: "-password -__v" })
+                .select('-__v')
+                .populate({ path: 'owner', select: '-password -__v' })
                 .exec(function (err, doc) {
                     if (err) {
                         return res.status(500).send({ error: err });
@@ -21,7 +21,7 @@ class NoteControllers {
         try {
             const note = await NoteModel.findById(req.params._id);
             if (!note) {
-                return res.status(404).json({ error: "Note not found!" });
+                return res.status(404).json({ error: 'Note not found!' });
             }
             return res.status(200).json(note);
         } catch (error) {
@@ -60,7 +60,7 @@ class NoteControllers {
                     if (err) {
                         return res.status(500).send({ error: err });
                     }
-                    return res.send("Succesfully saved.");
+                    return res.send('Succesfully saved.');
                 });
         } catch (error) {
             console.log(error);
@@ -72,24 +72,29 @@ class NoteControllers {
         if (!userExist) {
             return res
                 .status(404)
-                .send("This user does not exist in database!");
+                .send('This user does not exist in database!');
         }
 
-        const toBeUpdatedNotes = [];
-        await Promise.all(
-            notes.map(async (note) => {
-                const noteData = await NoteModel.findOne({
-                    local_id: note.local_id,
-                    lastUpdated: { $gt: note.lastUpdated },
-                })?.populate({ path: "owner", select: "-password -__v" });
+        let toBeUpdatedNotes = [];
+        if (notes.length === 0) {
+            toBeUpdatedNotes = await NoteModel.find({ owner: [owner] });
+        }
+        if (notes.length !== 0) {
+            await Promise.all(
+                notes.map(async (note) => {
+                    const noteData = await NoteModel.findOne({
+                        local_id: note.local_id,
+                        lastUpdated: { $gt: note.lastUpdated },
+                    })?.populate({ path: 'owner', select: '-password -__v' });
 
-                if (noteData !== null) {
-                    console.log("noteData:", noteData);
-                    toBeUpdatedNotes.push(noteData);
-                }
-                return;
-            })
-        );
+                    if (noteData !== null) {
+                        console.log('noteData:', noteData);
+                        toBeUpdatedNotes.push(noteData);
+                    }
+                    return;
+                })
+            );
+        }
 
         return res.status(200).json(toBeUpdatedNotes);
     };
