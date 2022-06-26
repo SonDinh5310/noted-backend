@@ -11,8 +11,6 @@ const registerValidate = (data) => {
                 )
             )
             .required(),
-        username: Joi.string().alphanum().min(3).max(30).required(),
-
         email: Joi.string()
             .min(10)
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
@@ -36,9 +34,7 @@ const loginValidate = (data) => {
             .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
             .required(),
 
-        password:
-            Joi.string()
-            .required(),
+        password: Joi.string().required(),
     });
 
     return schema.validate(data);
