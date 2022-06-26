@@ -45,9 +45,13 @@ class UserControllers {
 
         const user = await UserModel.findOne({ email: req.body.email });
         if (!user) {
-            return res
-                .status(404)
-                .json({ error: "There's no user with this email in database" });
+            return (
+                res
+                    // .status(404)
+                    .json({
+                        error: "There's no user with this email in database",
+                    })
+            );
         }
 
         const loginPasswordCheck = bcrypt.compareSync(
