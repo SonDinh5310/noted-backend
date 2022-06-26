@@ -66,7 +66,10 @@ class UserControllers {
             delete user._doc.password;
             return res.header('auth-token', token).status(200).json(user._doc);
         } catch (error) {
-            res.status(400).json({ error: error });
+            res.status(400).json({
+                status: 400,
+                error: 'Wrong email or password',
+            });
         }
     };
 }
