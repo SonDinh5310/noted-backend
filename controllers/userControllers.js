@@ -28,8 +28,8 @@ class UserControllers {
         });
 
         try {
-            await newUser.save();
-            res.status(200);
+            const user = await newUser.save();
+            res.status(200).json('register success');
         } catch (error) {
             res.json({ error: error });
         }
