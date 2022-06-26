@@ -8,16 +8,14 @@ class UserControllers {
     register = async (req, res) => {
         const { error } = registerValidate(req.body);
         if (error) {
-            return res.status(400).json({ error: error.details[0].message });
+            return res.json({ error: error.details[0].message });
         }
 
         const emailExists = await UserModel.findOne({
             email: req.body.email,
         }).select('-password');
         if (emailExists) {
-            return res
-                .status(400)
-                .json({ error: 'Email already exists in database' });
+            return res.json({ error: 'Email already exists in database' });
         }
 
         const salt = bcrypt.genSaltSync(10);
@@ -33,14 +31,14 @@ class UserControllers {
             const user = await newUser.save();
             res.send(user);
         } catch (error) {
-            res.status(400).json({ error: error });
+            res.json({ error: error });
         }
     };
 
     login = async (req, res) => {
         const { error } = loginValidate(req.body);
         if (error) {
-            return res.status(400).send(error.details[0].message);
+            return res.send(error.details[0].message);
         }
 
         const user = await UserModel.findOne({ email: req.body.email });
@@ -70,7 +68,7 @@ class UserControllers {
             delete user._doc.password;
             return res.header('auth-token', token).status(200).json(user._doc);
         } catch (error) {
-            res.status(400).json({
+            res.json({
                 status: 400,
                 error: 'Wrong email or password',
             });
